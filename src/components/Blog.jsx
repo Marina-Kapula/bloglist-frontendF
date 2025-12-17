@@ -1,9 +1,7 @@
 // src/components/Blog.jsx
-// 5.7: Blog-komponentti, jossa view/hide
-
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLike }) => {   // <‑ добавили handleLike
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -18,7 +16,6 @@ const Blog = ({ blog }) => {
     setVisible(!visible)
   }
 
-  // 5.7: kaksi eri näkymää
   const detailsVisible = { display: visible ? '' : 'none' }
   const detailsHidden = { display: visible ? 'none' : '' }
 
@@ -35,7 +32,7 @@ const Blog = ({ blog }) => {
         <div>{blog.url}</div>
         <div>
           likes {blog.likes || 0}{' '}
-          <button>like</button> {/* 5.7: кнопка пока без логики */}
+          <button onClick={() => handleLike(blog)}>like</button>
         </div>
         <div>{blog.user?.name}</div>
       </div>

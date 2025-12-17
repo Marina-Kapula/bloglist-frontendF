@@ -76,6 +76,18 @@ const App = () => {
     setBlogs(blogs.concat(returnedBlog))
   }
 
+  // 5.8: like-painikkeen toiminnallisuus
+  const handleLike = async (blog) => {
+    const updatedBlog = {
+      ...blog,
+      user: blog.user.id || blog.user,        // backend хочет id юзера
+      likes: (blog.likes || 0) + 1,
+    }
+
+    const returnedBlog = await blogService.update(blog.id, updatedBlog)
+    setBlogs(blogs.map(b => b.id !== blog.id ? returnedBlog : b))
+  }
+
   // 5.1: Якщо не залогінений - показуємо форму логіну
   if (user === null) {
     return (
@@ -109,7 +121,7 @@ const App = () => {
     )
   }
 
-  // 5.1–5.6: Якщо залогінений - блоги + форма створення в Togglable
+  // 5.1–5.6 (+5.8): Якщо залогінений - блоги + форма створення в Togglable
   return (
     <div>
       <h2>blogs</h2>
@@ -122,9 +134,14 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+{blogs.map(blog =>
+  <Blog
+    key={blog.id || blog._id}   // <- меняем только эту строку
+    blog={blog}
+    handleLike={handleLike}
+  />
+)}
+
     </div>
   )
 }
