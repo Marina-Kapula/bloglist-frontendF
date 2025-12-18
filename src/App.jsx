@@ -85,7 +85,7 @@ const App = () => {
     }
 
     const returnedBlog = await blogService.update(blog.id, updatedBlog)
-    setBlogs(blogs.map(b => b.id !== blog.id ? returnedBlog : b))
+    setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
   }
 
   // 5.1: Якщо не залогінений - показуємо форму логіну
