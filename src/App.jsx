@@ -121,8 +121,8 @@ const App = () => {
     )
   }
 
-  // 5.1–5.6 (+5.8): Якщо залогінений - блоги + форма створення в Togglable
-  return (
+  
+return (
     <div>
       <h2>blogs</h2>
       <p>
@@ -134,13 +134,17 @@ const App = () => {
         <BlogForm createBlog={createBlog} />
       </Togglable>
 
-{blogs.map(blog =>
-  <Blog
-    key={blog.id || blog._id}   // <- меняем только эту строку
-    blog={blog}
-    handleLike={handleLike}
-  />
-)}
+      {/* 5.10: сортировка блогов по количеству лайков (сначала больше всего) */}
+      {blogs
+        .slice()                                   // 5.10: не мутируем state
+        .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+        .map(blog =>
+          <Blog
+            key={blog.id || blog._id}
+            blog={blog}
+            handleLike={handleLike}
+          />
+        )}
 
     </div>
   )
