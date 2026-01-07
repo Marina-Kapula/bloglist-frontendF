@@ -1,7 +1,8 @@
 // src/components/Blog.jsx
 import { useState } from 'react'
 
-const Blog = ({ blog, handleLike }) => {   // <‑ добавили handleLike
+// 5.7–5.11: Blog-komponentti
+const Blog = ({ blog, handleLike, handleRemove, currentUser }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -19,6 +20,12 @@ const Blog = ({ blog, handleLike }) => {   // <‑ добавили handleLike
   const detailsVisible = { display: visible ? '' : 'none' }
   const detailsHidden = { display: visible ? 'none' : '' }
 
+  // 5.11: показываем remove только если блог создал текущий пользователь
+  const isOwner =
+    blog.user &&
+    (blog.user.username === currentUser.username ||
+      blog.user.name === currentUser.name)
+
   return (
     <div style={blogStyle}>
       <div style={detailsHidden}>
@@ -35,6 +42,10 @@ const Blog = ({ blog, handleLike }) => {   // <‑ добавили handleLike
           <button onClick={() => handleLike(blog)}>like</button>
         </div>
         <div>{blog.user?.name}</div>
+
+        {isOwner && (
+          <button onClick={() => handleRemove(blog)}>remove</button>
+        )}
       </div>
     </div>
   )

@@ -76,7 +76,7 @@ const App = () => {
     setBlogs(blogs.concat(returnedBlog))
   }
 
-  // 5.8: like-painikkeen toiminnallisuus
+   // 5.8: like-painikkeen toiminnallisuus
   const handleLike = async (blog) => {
     const updatedBlog = {
       ...blog,
@@ -86,6 +86,17 @@ const App = () => {
 
     const returnedBlog = await blogService.update(blog.id, updatedBlog)
     setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
+  }
+
+  // 5.11: удаление блога
+  const handleRemove = async (blog) => {
+    const ok = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}?`
+    )
+    if (!ok) return
+
+    await blogService.remove(blog.id)
+    setBlogs(blogs.filter(b => b.id !== blog.id))
   }
 
   // 5.1: Якщо не залогінений - показуємо форму логіну
@@ -121,8 +132,8 @@ const App = () => {
     )
   }
 
-  
-return (
+  // 5.1–5.6 (+5.8, 5.10, 5.11): Якщо залогінений - блоги + форма створення в Togglable
+  return (
     <div>
       <h2>blogs</h2>
       <p>
@@ -134,20 +145,21 @@ return (
         <BlogForm createBlog={createBlog} />
       </Togglable>
 
-      {/* 5.10: сортировка блогов по количеству лайков (сначала больше всего) */}
+      {/* 5.10: сортируем по лайкам, 5.11: передаём remove и currentUser */}
       {blogs
-        .slice()                                   // 5.10: не мутируем state
+        .slice()
         .sort((a, b) => (b.likes || 0) - (a.likes || 0))
-        .map(blog =>
+        .map((blog) => (
           <Blog
             key={blog.id || blog._id}
             blog={blog}
             handleLike={handleLike}
+            handleRemove={handleRemove}   // 5.11
+            currentUser={user}            // 5.11
           />
-        )}
-
+        ))}
     </div>
   )
-}
+}  // <= закрываем функцию App
 
 export default App
