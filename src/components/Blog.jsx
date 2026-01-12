@@ -1,7 +1,9 @@
 // src/components/Blog.jsx
+// Компонент одного блогу: показує коротко/детально, лайки, видалення
+
 import { useState } from 'react'
 
-// 5.7–5.11: Blog-komponentti
+// 5.7–5.11: Blog-компонент
 const Blog = ({ blog, handleLike, handleRemove, currentUser }) => {
   const [visible, setVisible] = useState(false)
 
@@ -20,24 +22,26 @@ const Blog = ({ blog, handleLike, handleRemove, currentUser }) => {
   const detailsVisible = { display: visible ? '' : 'none' }
   const detailsHidden = { display: visible ? 'none' : '' }
 
-  // 5.11: показываем remove только если блог создал текущий пользователь
+  // 5.11: показуємо remove тільки якщо блог створив поточний користувач
   const isOwner =
     blog.user &&
     (blog.user.username === currentUser.username ||
       blog.user.name === currentUser.name)
 
   return (
-    <div style={blogStyle}>
-      <div style={detailsHidden}>
+    <div style={blogStyle} className="blog">
+      {/* короткий вигляд: тільки назва й автор */}
+      <div style={detailsHidden} className="blog-summary">
         {blog.title} {blog.author}{' '}
         <button onClick={toggleVisibility}>view</button>
       </div>
 
-      <div style={detailsVisible}>
+      {/* детальний вигляд: url, лайки, автор, кнопка remove */}
+      <div style={detailsVisible} className="blog-details">
         {blog.title} {blog.author}{' '}
         <button onClick={toggleVisibility}>hide</button>
-        <div>{blog.url}</div>
-        <div>
+        <div className="blog-url">{blog.url}</div>
+        <div className="blog-likes">
           likes {blog.likes || 0}{' '}
           <button onClick={() => handleLike(blog)}>like</button>
         </div>
