@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -8,8 +9,12 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:3003',
-        changeOrigin: true
-      }
-    }
-  }
+        changeOrigin: true,
+      },
+    },
+  },
+  test: {
+    environment: 'jsdom', // дає window, document для тестів
+    globals: true,        // дозволяє describe/it/expect без імпорту
+  },
 })

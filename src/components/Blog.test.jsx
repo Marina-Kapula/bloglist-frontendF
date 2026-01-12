@@ -1,51 +1,49 @@
-
-
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import Blog from './Blog'
 
-// Тестові дані блогу
+// testidata yhdelle blogille
 const blog = {
-  title: 'Тестовий блог',
-  author: 'Тестовий Автор',
+  title: 'Testiblogi',
+  author: 'Testikirjoittaja',
   url: 'http://example.com',
   likes: 5,
   user: {
     username: 'testuser',
-    name: 'Test User',
+    name: 'Testikäyttäjä',
     id: '123',
   },
 }
 
-// Поточний користувач (власник блогу)
+// nykyinen kirjautunut käyttäjä (blogin omistaja)
 const currentUser = {
   username: 'testuser',
-  name: 'Test User',
+  name: 'Testikäyttäjä',
 }
 
 describe('<Blog />', () => {
-  // 5.13
-  it('відображає тільки назву та автора, але не url і лайки за замовчуванням', () => {
-    render(
-      <Blog
-        blog={blog}
-        handleLike={() => {}}
-        handleRemove={() => {}}
-        currentUser={currentUser}
-      />
-    )
+  // 5.13: Blog-komponentti näyttää oletuksena vain otsikon ja kirjoittajan
+it('näyttää vain otsikon ja kirjoittajan oletuksena', () => {
+  const { container } = render(
+    <Blog
+      blog={blog}
+      handleLike={() => {}}
+      handleRemove={() => {}}
+      currentUser={currentUser}
+    />
+  )
 
-    expect(
-      screen.getByText('Тестовий блог Тестовий Автор')
-    ).toBeDefined()
+  const summary = container.querySelector('.blog-summary')
+  expect(summary.textContent).toMatch(/Testiblogi[\s\S]*Testikirjoittaja/)
 
-    const details = document.querySelector('.blog-details')
-    expect(details).toHaveStyle('display: none')
-  })
+  const details = container.querySelector('.blog-details')
+  expect(details.style.display).toBe('none')
+})
 
-  // 5.14
-  it('показує url та кількість лайків після натискання кнопки view', async () => {
+
+  // 5.14: URL ja tykkäysten määrä näkyvät, kun view-nappia painetaan
+  it('näyttää urlin ja tykkäysten määrän, kun view-nappia painetaan', async () => {
     const user = userEvent.setup()
 
     render(
@@ -64,8 +62,8 @@ describe('<Blog />', () => {
     expect(screen.getByText(/likes 5/)).toBeDefined()
   })
 
-  // 5.15
-  it('двічі викликає обробник лайків, якщо натиснути кнопку like двічі', async () => {
+  // 5.15: like-handleria kutsutaan kahdesti, kun like-nappia painetaan kahdesti
+  it('kutsuu like-handleria kaksi kertaa, kun like-nappia painetaan kahdesti', async () => {
     const user = userEvent.setup()
     const mockLike = vi.fn()
 
