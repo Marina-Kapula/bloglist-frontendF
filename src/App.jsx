@@ -77,16 +77,22 @@ const App = () => {
   }
 
    // 5.8: like-painikkeen toiminnallisuus
-  const handleLike = async (blog) => {
-    const updatedBlog = {
-      ...blog,
-      user: blog.user.id || blog.user,        // backend хочет id юзера
-      likes: (blog.likes || 0) + 1,
-    }
-
-    const returnedBlog = await blogService.update(blog.id, updatedBlog)
-    setBlogs(blogs.map(b => b.id === blog.id ? returnedBlog : b))
+const handleLike = async (blog) => {
+  const updatedForBackend = {
+    ...blog,
+    user: blog.user.id || blog.user,
+    likes: (blog.likes || 0) + 1,
   }
+
+  const returned = await blogService.update(blog.id, updatedForBackend)
+
+  setBlogs(blogs.map(b =>
+    b.id !== blog.id
+      ? b
+      : { ...returned, user: blog.user } // повертаємо повний user
+  ))
+}
+
 
   // 5.11: удаление блога
   const handleRemove = async (blog) => {
